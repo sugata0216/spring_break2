@@ -10,13 +10,14 @@ CREATE TABLE users(
     name VARCHAR(255) NOT NULL UNIQUE,
     password CHAR(64) NOT NULL,
     salt CHAR(16) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE
+    email VARCHAR(255) NOT NULL UNIQUE,
+    authority INTEGER NOT NULL
 );
 CREATE TABLE orders(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     user_id INTEGER NOT NULL,
     total_amount INTEGER NOT NULL,
-    order_date DATE NOT NULL,
+    order_date DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 CREATE TABLE order_details(
@@ -27,4 +28,4 @@ CREATE TABLE order_details(
     sub_total INTEGER NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
-)
+);

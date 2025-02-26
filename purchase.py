@@ -1,11 +1,13 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox
+from db import insert_orders, insert_order_details, select_orders
 class Purchase(tk.Frame):
-    def __init__(self, master, account, product_name_list, product_price_list, product_image_list):
+    def __init__(self, master, account, product_id_list, product_name_list, product_price_list, product_image_list):
         super().__init__(master, width=400, height=500)
         self.master = master
         self.account = account
+        self.product_id_list = product_id_list
         self.product_name_list = product_name_list
         self.product_price_list = product_price_list
         self.product_image_list = product_image_list
@@ -151,4 +153,8 @@ class Purchase(tk.Frame):
         self.product_list[3] += self.product_price_list[3]
         self.label8.configure(text=sum(self.product_list))
     def confirmed_event(self):
-        pass
+        insert_orders(self.account[0], sum(self.product_list))
+        row = select_orders()
+        for i in range(len(self.product_list)):
+            if self.product_list[i] != 0:
+                insert_order_details(row[0], self.product_id_list[i], self.product_list[i] // self.product_price_list[i], self.product_list[i])

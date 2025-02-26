@@ -32,8 +32,16 @@ class Registration(tk.Frame):
         self.label7.place(x=50, y=330)
         self.name_entry = tk.Entry(self, width=50)
         self.name_entry.place(x=50, y=350)
+        self.label8 = tk.Label(self, text='権限', font=('', 9, 'bold'))
+        self.label8.place(x=50, y=380)
+        self.radio_status = tk.IntVar()
+        self.radio1 = tk.Radiobutton(self, text='管理者', variable=self.radio_status, value=1)
+        self.radio2 = tk.Radiobutton(self, text='利用者', variable=self.radio_status, value=2)
+        self.radio_status.set(1)
+        self.radio1.place(x=50, y=400)
+        self.radio2.place(x=130, y=400)
         self.registration_button = tk.Button(self, text='登録', fg='white', bg='orange', command=self.registration_event)
-        self.registration_button.place(x=190, y=380)
+        self.registration_button.place(x=190, y=430)
     def return_event(self):
         from boot import Boot
         self.destroy()
@@ -63,7 +71,8 @@ class Registration(tk.Frame):
             if name == row[1]:
                 messagebox.showerror('名前の入力', 'すでに使われている名前です。')
                 break
-        insert_user(name, pw, email)
+        authority = self.radio_status.get()
+        insert_user(name, pw, email, authority)
         from boot import Boot
         self.destroy()
         Boot(self.master) 

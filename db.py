@@ -13,13 +13,13 @@ def get_hashed_password(plain_pw, salt):
 def get_connection():
     connection = MySQLdb.connect(user='root', password='mcmK1201', host='localhost', database='spring')
     return connection
-def insert_user(name, pw, email):
+def insert_user(name, pw, email, authority):
     salt = get_salt()
     hashed_pw = get_hashed_password(pw, salt)
     connection = get_connection()
     cursor = connection.cursor()
-    sql = 'INSERT INTO users (id, name, password, salt, email) VALUES (DEFAULT, %s, %s, %s, %s)'
-    cursor.execute(sql, (name, hashed_pw, salt, email))
+    sql = 'INSERT INTO users (id, name, password, salt, email, authority) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
+    cursor.execute(sql, (name, hashed_pw, salt, email, authority))
     connection.commit()
     cursor.close()
     connection.close()
@@ -41,7 +41,7 @@ def get_account_by_email(email):
     cursor.close()
     connection.close()
     return account
-def login(email, input_pw):
+def login(email, input_pw, authority):
     account = get_account_by_email(email)
     if account is None:
         return None
@@ -49,7 +49,10 @@ def login(email, input_pw):
     salt = account[3]
     hashed_input_pw = get_hashed_password(input_pw, salt)
     if hashed_db_pw == hashed_input_pw:
-        return account
+        if account[5] == authority:
+            return account
+        else:
+            return None
     else:
         return None
 def select_products_by_keyword(keyword):
@@ -62,3 +65,36 @@ def select_products_by_keyword(keyword):
     cursor.close()
     connection.close()
     return rows
+def insert_orders(user_id, total_amount):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'INSERT INTO orders (id, user_id, total_amount, order_date) VALUES (default, %s, %s, now())'
+    cursor.execute(sql, (user_id, total_amount))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def insert_order_details(order_id, product_id, quantity, sub_total):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'INSERT INTO order_details (id, order_id, product_id, quantity, sub_total) VALUES (default, %s, %s, %s, %s)'
+    cursor.execute(sql, (order_id, product_id, quantity, sub_total))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def select_orders():
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'SELECT * FROM orders ORDER BY order_date DESC LIMIT 1'
+    cursor.execute(sql)
+    row = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return row
+def insert_products(name, price, product_image):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'INSERT INTO products (id, name, price, product_image) VALUES (default, %s, %s, %s)'
+    cursor.execute(sql, (name, price, product_image))
+    connection.commit()
+    cursor.close()
+    connection.close()

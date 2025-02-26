@@ -25,6 +25,14 @@ class Login(tk.Frame):
         self.label4.place(x=30, y=150)
         self.pw_entry = tk.Entry(self, show='●', width=50)
         self.pw_entry.place(x=30, y=180)
+        self.label5 = tk.Label(self, text='権限', fg='gray')
+        self.label5.place(x=30, y=200)
+        self.radio_status = tk.IntVar()
+        self.radio1 = tk.Radiobutton(self, text='管理者', variable=self.radio_status, value=1)
+        self.radio2 = tk.Radiobutton(self, text='利用者', variable=self.radio_status, value=2)
+        self.radio1.place(x=30, y=230)
+        self.radio2.place(x=100, y=230)
+        self.radio_status.set(1)
         self.continue_button = tk.Button(self, text='続ける', fg='white', bg='orange', command=self.continue_event)
         self.continue_button.place(x=190, y=230)
     def return_event(self):
@@ -38,10 +46,10 @@ class Login(tk.Frame):
         pw = self.pw_entry.get()
         if len(pw.strip()) <= 0:
             messagebox.showerror('パスワードの入力', 'パスワードを入力してください。')
-        account = login(email, pw)
+        authority = self.radio_status.get()
+        account = login(email, pw, authority)
         if account is None:
             messagebox.showerror('ログイン', 'ログインに失敗しました。')
             return
         self.destroy()
         Application(self.master, account)
-        

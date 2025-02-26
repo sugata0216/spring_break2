@@ -15,6 +15,7 @@ class Search(tk.Frame):
         self.product_name_list = []
         self.product_price_list = []
         self.product_image_list = []
+        self.product_id_list = []
         self.pack()
         master.geometry('400x500')
         master.title('検索')
@@ -88,6 +89,7 @@ class Search(tk.Frame):
                 index += 1
     def cart_event(self, index, rows):
         product_data = rows[index]
+        self.product_id_list.append(product_data[0])
         self.product_name_list.append(product_data[1])
         self.product_price_list.append(product_data[2])
         self.product_image_list.append(product_data[3])
@@ -95,4 +97,4 @@ class Search(tk.Frame):
         self.label2.configure(text=len(self.product_name_list), fg='white', bg='orange')
     def purchase_event(self):
         self.destroy()
-        Purchase(self.master, self.account, self.product_name_list, self.product_price_list, self.product_image_list)
+        Purchase(self.master, self.account, self.product_id_list, self.product_name_list, self.product_price_list, self.product_image_list)
