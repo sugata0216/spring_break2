@@ -34,7 +34,7 @@ class Login(tk.Frame):
         self.radio2.place(x=100, y=230)
         self.radio_status.set(1)
         self.continue_button = tk.Button(self, text='続ける', fg='white', bg='orange', command=self.continue_event)
-        self.continue_button.place(x=190, y=230)
+        self.continue_button.place(x=190, y=250)
     def return_event(self):
         from boot import Boot
         self.destroy()

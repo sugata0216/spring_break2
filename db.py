@@ -98,3 +98,40 @@ def insert_products(name, price, product_image):
     connection.commit()
     cursor.close()
     connection.close()
+def delete_products(id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'DELETE FROM products WHERE id = %s'
+    cursor.execute(sql, (id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def select_products():
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'SELECT * FROM products'
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return rows
+def delete_order_details(product_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'DELETE FROM order_details WHERE product_id = %s'
+    cursor.execute(sql, (product_id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def update_products(id, name, price, product_image):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'UPDATE products SET name = %s, price = %s, product_image = %s WHERE id = %s'
+    cursor.execute(sql, (name, price, product_image, id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def select_order_details(user_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'SELECT * FROM order_details JOIN orders ON order_details.order_id = orders.id WHERE orders.user_id = %s'

@@ -69,7 +69,7 @@ class Purchase(tk.Frame):
         self.label8 = tk.Label(self, text=sum(self.product_list), font=('', 13, 'bold'))
         self.label8.place(x=60, y=400)
         self.label9 = tk.Label(self, text='円', font=('', 8))
-        self.label9.place(x=100, y=405)
+        self.label9.place(x=130, y=405)
         self.confirmed_button = tk.Button(self, text='注文を確定', fg='white', bg='orange', command=self.confirmed_event)
         self.confirmed_button.place(x=300, y=400)
     def return_event(self):
