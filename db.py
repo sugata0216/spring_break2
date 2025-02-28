@@ -18,7 +18,7 @@ def insert_user(name, pw, email, authority):
     hashed_pw = get_hashed_password(pw, salt)
     connection = get_connection()
     cursor = connection.cursor()
-    sql = 'INSERT INTO users (id, name, password, salt, email, authority) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
+    sql = 'INSERT INTO users (id, name, password, salt, email, authority, point) VALUES (DEFAULT, %s, %s, %s, %s, %s, DEFAULT)'
     cursor.execute(sql, (name, hashed_pw, salt, email, authority))
     connection.commit()
     cursor.close()
@@ -134,4 +134,21 @@ def update_products(id, name, price, product_image):
 def select_order_details(user_id):
     connection = get_connection()
     cursor = connection.cursor()
-    sql = 'SELECT * FROM order_details JOIN orders ON order_details.order_id = orders.id WHERE orders.user_id = %s'
+    sql = 'SELECT * FROM products JOIN order_details ON products.id = order_details.product_id JOIN orders ON order_details.order_id = orders.id JOIN users ON orders.user_id = users.id WHERE orders.user_id = %s'
+    cursor.execute(sql, (user_id,))
+    rows = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return rows
+def update_point(point, user_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'UPDATE users SET point = %s WHERE id = %s'
+    cursor.execute(sql, (point, user_id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def select_recommendation():
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'SELECT * FROM products'

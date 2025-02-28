@@ -11,7 +11,8 @@ CREATE TABLE users(
     password CHAR(64) NOT NULL,
     salt CHAR(16) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    authority INTEGER NOT NULL
+    authority INTEGER NOT NULL,
+    point INTEGER DEFAULT 0
 );
 CREATE TABLE orders(
     id INTEGER PRIMARY KEY AUTO_INCREMENT,

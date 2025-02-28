@@ -25,6 +25,7 @@ class Application(tk.Frame):
         self.search_label.place(x=170, y=80)
         self.order_button = tk.Button(self, text='ご注文', command=self.order_event)
         self.order_button.place(x=180, y=250)
+        
         if self.account[5] == 1:
             self.registration_button = tk.Button(self, text='商品登録', command=self.registration_event)
             self.registration_button.place(x=170, y=150)

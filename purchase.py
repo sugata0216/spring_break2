@@ -1,7 +1,8 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox
-from db import insert_orders, insert_order_details, select_orders
+from db import insert_orders, insert_order_details, select_orders, update_point, get_account_by_email
+import random
 class Purchase(tk.Frame):
     def __init__(self, master, account, product_id_list, product_name_list, product_price_list, product_image_list):
         super().__init__(master, width=400, height=500)
@@ -13,6 +14,7 @@ class Purchase(tk.Frame):
         self.product_image_list = product_image_list
         self.image_list = []
         self.product_list = []
+        self.point_list = [1, 2, 3, 5, 10, 100, 1000, 10000]
         self.pack()
         master.geometry('400x500')
         master.title('購入')
@@ -64,6 +66,13 @@ class Purchase(tk.Frame):
             self.label6 = tk.Label(self, text=1)
             self.label6.place(x=230, y=180)
             self.plus_button4 = tk.Button(self, text='-', bg='gray', command=self.plus_event4)
+        self.label10 = tk.Label(self, text='ポイントで支払う')
+        self.label10.place(x=50, y=230)
+        self.label11 = tk.Label(self, text=f'{self.account[6]}pt', fg='gray')
+        self.label11.place(x=50, y=250)
+        self.check_status = tk.BooleanVar()
+        self.check1 = tk.Checkbutton(self, variable=self.check_status)
+        self.check1.place(x=100, y=250)
         self.label7 = tk.Label(self, text='総額')
         self.label7.place(x=30, y=400)
         self.label8 = tk.Label(self, text=sum(self.product_list), font=('', 13, 'bold'))
@@ -153,8 +162,20 @@ class Purchase(tk.Frame):
         self.product_list[3] += self.product_price_list[3]
         self.label8.configure(text=sum(self.product_list))
     def confirmed_event(self):
-        insert_orders(self.account[0], sum(self.product_list))
+        total = sum(self.product_list)
+        insert_orders(self.account[0], total)
         row = select_orders()
         for i in range(len(self.product_list)):
             if self.product_list[i] != 0:
                 insert_order_details(row[0], self.product_id_list[i], self.product_list[i] // self.product_price_list[i], self.product_list[i])
+        if self.check_status.get():
+            new_point = self.account[6] - total
+            if new_point < 0:
+                new_point = 0
+            update_point(new_point, self.account[0])
+            self.account = get_account_by_email(self.account[4])
+        if total >= 10000:
+            point = random.choice(self.point_list)
+            new_point = self.account[6] + point
+            update_point(new_point, self.account[0])
+            self.account = get_account_by_email(self.account[4])
