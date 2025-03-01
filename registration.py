@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from db import select_users, insert_user
+from db import select_users, insert_user, send_mail
 class Registration(tk.Frame):
     def __init__(self, master):
         super().__init__(master, width=400, height=500)
@@ -73,6 +73,10 @@ class Registration(tk.Frame):
                 break
         authority = self.radio_status.get()
         insert_user(name, pw, email, authority)
+        to = email
+        subject = 'ユーザ登録時の登録完了メール'
+        body = f'ユーザ登録が完了しました。'
+        send_mail(to, subject, body)
         from boot import Boot
         self.destroy()
         Boot(self.master) 

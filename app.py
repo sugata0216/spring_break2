@@ -5,6 +5,7 @@ from product_registration import ProductRegistration
 from delete import Delete
 from change import Change
 from history import History
+from db import select_recommendation
 class Application(tk.Frame):
     def __init__(self, master, account):
         super().__init__(master, width=400, height=500)
@@ -25,7 +26,20 @@ class Application(tk.Frame):
         self.search_label.place(x=170, y=80)
         self.order_button = tk.Button(self, text='ご注文', command=self.order_event)
         self.order_button.place(x=180, y=250)
-        
+        self.label2 = tk.Label(self, text='目玉商品', font=('', 10))
+        self.label2.place(x=170, y=300)
+        recommendation = select_recommendation()
+        img2 = Image.open(recommendation[3])
+        img2 = img2.resize((50, 50))
+        self.recommendation_img = ImageTk.PhotoImage(img2)
+        self.label3 = tk.Label(self, image=self.recommendation_img)
+        self.label3.place(x=170, y=330)
+        self.label4 = tk.Label(self, text=recommendation[1])
+        self.label4.place(x=170, y=380)
+        self.label5 = tk.Label(self, text='￥')
+        self.label5.place(x=170, y=400)
+        self.label6 = tk.Label(self, text=recommendation[2], font=('', 13))
+        self.label6.place(x=190, y=400)
         if self.account[5] == 1:
             self.registration_button = tk.Button(self, text='商品登録', command=self.registration_event)
             self.registration_button.place(x=170, y=150)

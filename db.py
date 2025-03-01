@@ -1,6 +1,10 @@
 import random
 import hashlib
 import MySQLdb
+import os
+from smtplib import SMTP
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 def get_salt():
     random_source = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     salt = ''
@@ -151,4 +155,24 @@ def update_point(point, user_id):
 def select_recommendation():
     connection = get_connection()
     cursor = connection.cursor()
-    sql = 'SELECT * FROM products'
+    sql = 'SELECT products.id, products.name, products.price, products.product_image, SUM(order_details.quantity) AS total_quantity FROM order_details JOIN products ON order_details.product_id = products.id GROUP BY products.id, products.name, products.price, products.product_image ORDER BY total_quantity DESC LIMIT 1'
+    cursor.execute(sql)
+    recommendation = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return recommendation
+def send_mail(to, subject, body):
+        ID = 'k.sugata.sys24@morijyobi.ac.jp'
+        PASSWORD = os.environ['MAIL_PASS']
+        HOST = 'smtp.gmail.com'
+        PORT = 587
+        msg = MIMEMultipart()
+        msg.attach(MIMEText(body, 'html'))
+        msg['Subject'] = subject
+        msg['From'] = ID
+        msg['To'] = to
+        server = SMTP(HOST, PORT)
+        server.starttls()
+        server.login(ID, PASSWORD)
+        server.send_message(msg)
+        server.quit()
