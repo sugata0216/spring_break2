@@ -176,3 +176,30 @@ def send_mail(to, subject, body):
         server.login(ID, PASSWORD)
         server.send_message(msg)
         server.quit()
+def update_users(user_id, name):
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'UPDATE users SET name = %s WHERE id = %s'
+    cursor.execute(sql, (name, user_id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+def select_users():
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'SELECT * FROM users'
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return rows
+def update_pw(email, pw):
+    salt = get_salt()
+    hashed_pw = get_hashed_password(pw, salt)
+    connection = get_connection()
+    cursor = connection.cursor()
+    sql = 'UPDATE users SET password = %s, salt = %s WHERE email = %s'
+    cursor.execute(sql, (hashed_pw, salt, email))
+    connection.commit()
+    cursor.close()
+    connection.close()

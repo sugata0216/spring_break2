@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from db import login
 from app import Application
+from forgot import Forgot
 class Login(tk.Frame):
     def __init__(self, master):
         super().__init__(master, width=400, height=500)
@@ -35,6 +36,8 @@ class Login(tk.Frame):
         self.radio_status.set(1)
         self.continue_button = tk.Button(self, text='続ける', fg='white', bg='orange', command=self.continue_event)
         self.continue_button.place(x=190, y=250)
+        self.forgot_button = tk.Button(self, text='パスワードを忘れた方はこちら', command=self.forgot_event)
+        self.forgot_button.place(x=30, y=280)
     def return_event(self):
         from boot import Boot
         self.destroy()
@@ -53,3 +56,6 @@ class Login(tk.Frame):
             return
         self.destroy()
         Application(self.master, account)
+    def forgot_event(self):
+        self.destroy()
+        Forgot(self.master)

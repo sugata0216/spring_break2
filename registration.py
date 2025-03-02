@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from db import select_users, insert_user, send_mail
+from confirmation import Confirmation
+import random
 class Registration(tk.Frame):
     def __init__(self, master):
         super().__init__(master, width=400, height=500)
@@ -72,11 +74,14 @@ class Registration(tk.Frame):
                 messagebox.showerror('名前の入力', 'すでに使われている名前です。')
                 break
         authority = self.radio_status.get()
-        insert_user(name, pw, email, authority)
+        random_source = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        code = ''
+        for i in range(6):
+            code += random.choice(random_source)
         to = email
-        subject = 'ユーザ登録時の登録完了メール'
-        body = f'ユーザ登録が完了しました。'
+        subject = 'メールアクティベート'
+        body = f'確認コードは{code}です。'
         send_mail(to, subject, body)
-        from boot import Boot
         self.destroy()
-        Boot(self.master) 
+        Confirmation(self.master, email, pw, name, authority, code)
+        
