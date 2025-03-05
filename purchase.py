@@ -35,7 +35,7 @@ class Purchase(tk.Frame):
         self.plus_buttons = []
         for i in range(self.items_per_page):
             product_img_label = tk.Label(self)
-            product_img_label.place(x=30, y=100 + i * 80)
+            product_img_label.place(x=i * 60 + 30, y=100)
             self.product_images.append(product_img_label)
             price_label = tk.Label(self, fg='orange')
             price_label.place(x=i * 60 + 30, y=150)
